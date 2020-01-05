@@ -2,16 +2,21 @@
 {
     public class SimpleNode : Node
     {
-        private readonly double _value;
+        public double Value;
 
         public SimpleNode(double value)
         {
-            _value = value;
+            Value = value;
         }
 
         public override double Evaluate()
         {
-            return _value;
+            return Value;
+        }
+
+        public override string ChildExpressionString()
+        {
+            return Value.ToString("G29");
         }
     }
 }

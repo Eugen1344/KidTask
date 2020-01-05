@@ -2,22 +2,25 @@
 {
     public class OperationNode : Node
     {
-        public delegate double Operation(double left, double right);
-
-        private readonly Node _left;
-        private readonly Node _right;
-        private readonly Operation _operationFunction;
+        public Node Left;
+        public Node Right;
+        public Operation Operation;
 
         public OperationNode(Node left, Node right, Operation operationFunction)
         {
-            _left = left;
-            _right = right;
-            _operationFunction = operationFunction;
+            Left = left;
+            Right = right;
+            Operation = operationFunction;
         }
 
         public override double Evaluate()
         {
-            return _operationFunction(_left.Evaluate(), _right.Evaluate());
+            return Operation.Function(Left.Evaluate(), Right.Evaluate());
+        }
+
+        public override string ChildExpressionString()
+        {
+            return $"{Left.ChildExpressionString()}{Operation.OperationString}{Right.ChildExpressionString()}";
         }
     }
 }

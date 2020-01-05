@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace KidTask
 {
@@ -6,21 +7,24 @@ namespace KidTask
     {
         public static void Main(string[] args)
         {
-            OperationNode x = new OperationNode(new SimpleNode(2.0), new OperationNode(new SimpleNode(2.0), new SimpleNode(2.0), Addition), Multiplication);
+            TaskTree tree = new TaskTree(12345);
 
-            Console.WriteLine(x.Evaluate());
+            int i = 0;
+            foreach (Node combination in tree.SetGraphOperationCombinations())
+            {
+                //if (i < 10)
+                {
+                    Console.WriteLine($"x = {combination.ChildExpressionString()}");
+                }
+                //else
+                {
+                   // break;
+                }
+
+                i++;
+            }
 
             Console.ReadKey(true);
-        }
-
-        public static double Multiplication(double x, double y)
-        {
-            return x * y;
-        }
-
-        public static double Addition(double x, double y)
-        {
-            return x + y;
         }
     }
 }
