@@ -103,17 +103,24 @@ namespace KidTask
         {
             if (node.Right is OperationNode operationNode)
             {
-                foreach (OperationNode childNode in SetNodeOperation(operationNode))
+                foreach (Operation operation in Operations)
                 {
-                    yield return childNode;
+                    node.Operation = operation;
+
+                    foreach (OperationNode childNode in SetNodeOperation(operationNode))
+                    {
+                        yield return childNode;
+                    }
                 }
             }
-
-            foreach (Operation operation in Operations)
+            else
             {
-                node.Operation = operation;
+                foreach (Operation operation in Operations)
+                {
+                    node.Operation = operation;
 
-                yield return node;
+                    yield return node;
+                }
             }
         }
     }
