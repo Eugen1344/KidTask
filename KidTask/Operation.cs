@@ -6,11 +6,13 @@
 
         public readonly Func Function;
         public readonly string OperationString;
+        public readonly int Priority;
 
-        public Operation(Func function, string operationString)
+        public Operation(Func function, string operationString, int priority)
         {
             Function = function;
             OperationString = operationString;
+            Priority = priority;
         }
     }
 }

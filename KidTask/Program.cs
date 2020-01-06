@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace KidTask
 {
@@ -9,22 +8,17 @@ namespace KidTask
         {
             TaskTree tree = new TaskTree(123456789);
 
-            int i = 0;
-            foreach (Node combination in tree.SetGraphOperationCombinations())
+            foreach (Node combination in tree.GetGraphOperationCombinations())
             {
-                //if (i < 10)
-                {
-                    Console.WriteLine($"x = {combination.ChildExpressionString()}");
-                    Console.WriteLine($"x = {combination.Evaluate()}");
-                }
-                //else
-                {
-                   // break;
-                }
+                double value = combination.Evaluate();
 
-                i++;
+                if (value == 7415.0)
+                {
+                    Console.WriteLine($"{combination.ChildExpressionString()} = {value}");
+                }
             }
 
+            Console.WriteLine("Done");
             Console.ReadKey(true);
         }
     }

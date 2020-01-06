@@ -16,7 +16,7 @@
 
         public override string ChildExpressionString()
         {
-            return Value.ToString("G29");
+            return Value.ToString();
         }
     }
 }
