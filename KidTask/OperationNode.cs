@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace KidTask
 {
@@ -21,12 +22,22 @@ namespace KidTask
             return Operation.Function(Left.Evaluate(), Right.Evaluate());
         }
 
+        public override double EvaluateDebug()
+        {
+            double left = Left.EvaluateDebug();
+            double right = Right.EvaluateDebug();
+            double value = Operation.Function(left, right);
+
+            Console.WriteLine($"Evaluated: {left}{Operation.OperationString}{right} = {value}. Priority = {Operation.Priority}, override = {OverridePriority}, always override = {Operation.NeverOverride}");
+
+            return value;
+        }
+
         public override string ChildExpressionString()
         {
             string operationName = Operation.OperationString;
-            string operationString = new StringBuilder(operationName.Length * OverridePriority).Insert(0, operationName, OverridePriority + 1).ToString();
 
-            return $"{Left.ChildExpressionString()}{operationString}{Right.ChildExpressionString()}";
+            return $"{new string('(', OverridePriority)}{Left.ChildExpressionString()}{operationName}{Right.ChildExpressionString()}{new string(')', OverridePriority)}";
         }
     }
 }

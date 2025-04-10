@@ -6,19 +6,26 @@ namespace KidTask
     {
         public static void Main(string[] args)
         {
-            TaskTree tree = new TaskTree(123456789);
+            TaskTree tree = new TaskTree(123456);
 
             foreach (Node combination in tree.GetGraphOperationCombinations())
             {
                 double value = combination.Evaluate();
 
-                if (value == 7415.0)
-                {
-                    Console.WriteLine($"{combination.ChildExpressionString()} = {value}");
-                }
+                Console.WriteLine($"Attempted: {combination.ChildExpressionString()} = {value}");
+
+                if (Math.Abs(value - 61.0) != 0)
+                    continue;
+
+                Console.WriteLine($"\n\n\nFinished: {combination.ChildExpressionString()} = {value}");
+
+                Console.WriteLine("Done");
+                Console.ReadKey(true);
+
+                return;
             }
 
-            Console.WriteLine("Done");
+            Console.WriteLine("Nothing found");
             Console.ReadKey(true);
         }
     }

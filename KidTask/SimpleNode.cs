@@ -1,4 +1,6 @@
-﻿namespace KidTask
+﻿using System;
+
+namespace KidTask
 {
     public class SimpleNode : Node
     {
@@ -11,6 +13,13 @@
 
         public override double Evaluate()
         {
+            return Value;
+        }
+
+        public override double EvaluateDebug()
+        {
+            Console.WriteLine("Returned: " + Value);
+
             return Value;
         }
 

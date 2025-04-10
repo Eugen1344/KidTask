@@ -7,6 +7,7 @@
         public readonly Func Function;
         public readonly string OperationString;
         public readonly int Priority;
+        public bool NeverOverride;
 
         public Operation(Func function, string operationString, int priority)
         {

@@ -7,12 +7,12 @@ namespace KidTask
     {
         public static List<Operation> Operations = new List<Operation>
         {
-            new Operation(Composition, "", 3),
-            new Operation(Power, "^",2),
+            new Operation(Composition, "", 3) { NeverOverride = true },
+            new Operation(Power, "^", 2),
             new Operation(Multiplication, "*", 1),
             new Operation(Division, "/", 1),
             new Operation(Addition, "+", 0),
-            new Operation(Subtraction, "-", 0),
+            new Operation(Subtraction, "-", 0)
         };
 
         public static double Composition(double x, double y)
@@ -151,7 +151,10 @@ namespace KidTask
                             operationNode.Operation = operation;
 
                             Node copiedRootNode = CopyGraph(RootNode);
-                            BalanceGraphByOperationsOrder(copiedRootNode);
+
+                            while (!BalanceGraphByOperationsOrder(copiedRootNode))
+                            {
+                            }
 
                             yield return copiedRootNode;
                         }
@@ -160,51 +163,81 @@ namespace KidTask
             }
         }
 
-        private void BalanceGraphByOperationsOrder(Node node)
+        private bool BalanceGraphByOperationsOrder(Node node)
         {
+            bool isBalanced = true;
+
             if (node is OperationNode operationNode)
             {
                 if (operationNode.Left is OperationNode leftOperationNode)
                 {
-                    if (leftOperationNode.OverridePriority != operationNode.OverridePriority)
+                    if (!leftOperationNode.Operation.NeverOverride)
                     {
-                        if (leftOperationNode.OverridePriority < operationNode.OverridePriority)
+                        if (operationNode.Operation.NeverOverride)
                         {
                             SwapNodeAndLeftSubNode(operationNode, leftOperationNode);
+                            isBalanced = false;
+                        }
+                        else if (leftOperationNode.OverridePriority != operationNode.OverridePriority)
+                        {
+                            if (leftOperationNode.OverridePriority < operationNode.OverridePriority)
+                            {
+                                SwapNodeAndLeftSubNode(operationNode, leftOperationNode);
+                                isBalanced = false;
+                            }
+                        }
+                        else if (leftOperationNode.Operation.Priority < operationNode.Operation.Priority)
+                        {
+                            SwapNodeAndLeftSubNode(operationNode, leftOperationNode);
+                            isBalanced = false;
                         }
                     }
-                    else if (leftOperationNode.Operation.Priority < operationNode.Operation.Priority)
-                    {
-                        SwapNodeAndLeftSubNode(operationNode, leftOperationNode);
-                    }
 
-                    BalanceGraphByOperationsOrder(leftOperationNode);
+                    if (!BalanceGraphByOperationsOrder(leftOperationNode))
+                        isBalanced = false;
                 }
+
                 if (operationNode.Right is OperationNode rightOperationNode)
                 {
-                    if (rightOperationNode.OverridePriority != operationNode.OverridePriority)
+                    if (!rightOperationNode.Operation.NeverOverride)
                     {
-                        if (rightOperationNode.OverridePriority < operationNode.OverridePriority)
+                        if (operationNode.Operation.NeverOverride)
                         {
                             SwapNodeAndRightSubNode(operationNode, rightOperationNode);
+                            isBalanced = false;
+                        }
+                        else if (rightOperationNode.OverridePriority != operationNode.OverridePriority)
+                        {
+                            if (rightOperationNode.OverridePriority < operationNode.OverridePriority)
+                            {
+                                SwapNodeAndRightSubNode(operationNode, rightOperationNode);
+                                isBalanced = false;
+                            }
+                        }
+                        else if (rightOperationNode.Operation.Priority < operationNode.Operation.Priority)
+                        {
+                            SwapNodeAndRightSubNode(operationNode, rightOperationNode);
+                            isBalanced = false;
                         }
                     }
-                    else if (rightOperationNode.Operation.Priority < operationNode.Operation.Priority)
-                    {
-                        SwapNodeAndRightSubNode(operationNode, rightOperationNode);
-                    }
 
-                    BalanceGraphByOperationsOrder(rightOperationNode);
+                    if (!BalanceGraphByOperationsOrder(rightOperationNode))
+                        isBalanced = false;
                 }
             }
+
+            return isBalanced;
         }
 
         private static void SwapNodeAndLeftSubNode(OperationNode operationNode, OperationNode leftOperationNode)
         {
             OperationNode operationNodeCopy = new OperationNode(operationNode.Left, operationNode.Right, operationNode.Operation);
+            operationNodeCopy.OverridePriority = operationNode.OverridePriority;
 
             operationNode.Operation = leftOperationNode.Operation;
+            operationNode.OverridePriority = leftOperationNode.OverridePriority;
             leftOperationNode.Operation = operationNodeCopy.Operation;
+            leftOperationNode.OverridePriority = operationNodeCopy.OverridePriority;
 
             operationNode.Left = leftOperationNode.Left;
             operationNode.Right = leftOperationNode;
@@ -241,6 +274,7 @@ namespace KidTask
                 newNode.OverridePriority = operationNode.OverridePriority;
                 return newNode;
             }
+
             if (node is SimpleNode simpleNode)
             {
                 return new SimpleNode(simpleNode.Value);
